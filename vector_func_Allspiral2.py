@@ -18,7 +18,7 @@ Rs = 3  # らせん半径
 
 class Vecal:
     def __init__(self):
-        print('Vecalのコンストラクタ呼び出し')
+        pass
 
     # 磁場用の計算メソッド
     def magCross(self, X, Xs, Y, Ys, Z, Zs, Q, i):
@@ -77,7 +77,7 @@ class Vecal:
 
 class Curveplot:
     def __init__(self):
-        print('Curveplotのコンストラクタ呼び出し')
+        pass
 
     # らせんの３次元グラフ生成メソッド
     def plotSpiral(self):
