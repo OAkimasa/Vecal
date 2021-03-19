@@ -148,6 +148,111 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+    # ２重らせんの３次元グラフ生成メソッド
+    def plotDspiral(self):
+        X, Y, Z = np.meshgrid(
+            np.arange(-LX, LX+1, gridwidth),
+            np.arange(-LY, LY+1, gridwidth),
+            np.arange(-LZ, LZ+1, gridwidth)
+            )
+
+        # 置きなおし
+        LXx = 1+math.floor(LX/gridwidth)*2
+        LYy = 1+math.floor(LY/gridwidth)*2
+        LZz = 1+math.floor(LZ/gridwidth)*2
+
+        # 内側らせんの表示
+        Ltheta = Nn*2*np.pi  # theta生成数
+        theta = np.linspace(0, Ltheta, GnLight)
+        Xs = Rs*np.cos(theta)
+        Ys = Rs*np.sin(theta)
+        Zs = np.linspace(-LZ, LZ, GnLight)
+        ax.plot(Xs, Ys, Zs, linewidth=0.5)
+
+        # 内側点電化の生成
+        theta = np.linspace(0, Ltheta, Gn)
+        Xs = Rs*np.cos(theta)
+        Ys = Rs*np.sin(theta)
+        Zs = np.linspace(-LZ, LZ, Gn)
+        Xs = np.reshape(Xs, (1, Gn))
+        Ys = np.reshape(Ys, (1, Gn))
+        Zs = np.reshape(Zs, (1, Gn))
+
+        # 内側点電荷によるベクトル場の計算
+        Q = Qsum/Gn
+        Uin = np.zeros((LXx, LXx, LXx), dtype=float)
+        Vin = np.zeros((LYy, LYy, LYy), dtype=float)
+        Win = np.zeros((LZz, LZz, LZz), dtype=float)
+
+        Ve = Vecal()  # インスタンス化
+        args_ary = []
+        for i in range(Gn):
+            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+        for args in args_ary:
+            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
+            for tmp in results:
+                Uin = Uin + tmp[0]
+                Vin = Vin + tmp[1]
+                Win = Win + tmp[2]
+
+        # 外側らせんの表示
+        Ltheta = Nn*2*np.pi  # theta生成数
+        theta = np.linspace(0, Ltheta, GnLight)
+        Xs = (Rs+2)*np.cos(theta)
+        Ys = (Rs+2)*np.sin(theta)
+        Zs = np.linspace(-LZ, LZ, GnLight)
+        ax.plot(Xs, Ys, Zs, linewidth=0.5)
+
+        # 外側点電化の生成
+        theta = np.linspace(0, Ltheta, Gn)
+        Xs = (Rs+2)*np.cos(theta)
+        Ys = (Rs+2)*np.sin(theta)
+        Zs = np.linspace(-LZ, LZ, Gn)
+        Xs = np.reshape(Xs, (1, Gn))
+        Ys = np.reshape(Ys, (1, Gn))
+        Zs = np.reshape(Zs, (1, Gn))
+
+        # 外側点電荷によるベクトル場の計算
+        Q = Qsum/Gn
+        Uout = np.zeros((LXx, LXx, LXx), dtype=float)
+        Vout = np.zeros((LYy, LYy, LYy), dtype=float)
+        Wout = np.zeros((LZz, LZz, LZz), dtype=float)
+
+        Ve = Vecal()  # インスタンス化
+        args_ary = []
+        for i in range(Gn):
+            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+        for args in args_ary:
+            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
+            for tmp in results:
+                Uout = Uout + tmp[0]
+                Vout = Vout + tmp[1]
+                Wout = Wout + tmp[2]
+
+        # ２つのベクトル場の合計
+        U = Uin + Uout
+        V = Vin + Vout
+        W = Win + Wout
+
+        # 全ベクトルの大きさを合計
+        UVW = np.nansum(
+            np.sqrt(U**2)) + np.nansum(np.sqrt(V**2)) + np.nansum(np.sqrt(W**2))
+        # print(UVW)
+        FinalResize = 200/UVW  # 倍率
+        ax.quiver(
+            X, Y, Z, U*FinalResize, V*FinalResize, W*FinalResize,
+            edgecolor='r', facecolor='None', linewidth=0.5
+            )
+
+        # グラフの見た目について
+        ax.set_xlim(-LX, LX)
+        ax.set_ylim(-LY, LY)
+        ax.set_zlim(-LZ, LZ)
+
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('z')
+
 
 if __name__ == "__main__":
     start = time.time()
