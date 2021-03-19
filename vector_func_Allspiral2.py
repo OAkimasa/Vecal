@@ -4,9 +4,6 @@ import time
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(1, 1, 1, projection='3d')
-
 
 # 曲線上の電荷が作るベクトル場をシミュレーションする
 LL = 8  # 計算領域の立方体の一辺の長さ
@@ -148,6 +145,17 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        # 目盛り幅を揃える
+        max_range = np.array(
+            [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
+
+        mid_x = (X.max()+X.min()) * 0.5
+        mid_y = (Y.max()+Y.min()) * 0.5
+        mid_z = (Z.max()+Z.min()) * 0.5
+        ax.set_xlim(mid_x - max_range, mid_x + max_range)
+        ax.set_ylim(mid_y - max_range, mid_y + max_range)
+        ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
     # ２重らせんの３次元グラフ生成メソッド
     def plotDspiral(self):
         X, Y, Z = np.meshgrid(
@@ -253,11 +261,30 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        # 目盛り幅を揃える
+        max_range = np.array(
+            [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
+
+        mid_x = (X.max()+X.min()) * 0.5
+        mid_y = (Y.max()+Y.min()) * 0.5
+        mid_z = (Z.max()+Z.min()) * 0.5
+        ax.set_xlim(mid_x - max_range, mid_x + max_range)
+        ax.set_ylim(mid_y - max_range, mid_y + max_range)
+        ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
 
 if __name__ == "__main__":
     start = time.time()
+
+    fig = plt.figure(figsize=(16, 8))
+    ax = fig.add_subplot(1, 2, 1, projection='3d')
     Cu = Curveplot()
     Cu.plotSpiral()
+
+    ax = fig.add_subplot(1, 2, 2, projection='3d')
+    Cu = Curveplot()
+    Cu.plotDspiral()
+
     print(time.time()-start)
     # グラフ描画
     plt.show()
