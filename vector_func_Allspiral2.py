@@ -226,7 +226,6 @@ class Curveplot:
         Vout = np.zeros((LYy, LYy, LYy), dtype=float)
         Wout = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        Ve = Vecal()  # インスタンス化
         args_ary = []
         for i in range(Gn):
             args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
@@ -278,12 +277,11 @@ if __name__ == "__main__":
 
     fig = plt.figure(figsize=(16, 8))
     ax = fig.add_subplot(1, 2, 1, projection='3d')
-    Cu = Curveplot()
-    Cu.plotSpiral()
+    Cu = Curveplot()  # インスタンス化
+    Cu.plotSpiral()  # 好みのプロットメソッドを指定
 
     ax = fig.add_subplot(1, 2, 2, projection='3d')
-    Cu = Curveplot()
-    Cu.plotDspiral()
+    Cu.plotDspiral()  # 好みのプロットメソッドを指定
 
     print(time.time()-start)
     # グラフ描画
