@@ -23,8 +23,8 @@ class Vecal:
     def __init__(self):
         print('Vecalのコンストラクタ呼び出し')
 
+    # 磁場用の計算メソッド
     def magCross(self, X, Xs, Y, Ys, Z, Zs, Q, i):
-        # 磁場用の計算メソッド
         res = []
         tmp = []
         R = np.sqrt((X-Xs[0, i])**2+(Y-Ys[0, i])**2+(Z-Zs[0, i])**2)
@@ -54,8 +54,8 @@ class Vecal:
         res.append(tmp)
         return res
 
+    # 電場用の計算メソッド
     def eleCal(self, X, Xs, Y, Ys, Z, Zs, Q, i):
-        # 電場用の計算メソッド
         res = []
         tmp = []
         R = np.sqrt((X-Xs[0, i])**2+(Y-Ys[0, i])**2+(Z-Zs[0, i])**2)
@@ -82,8 +82,8 @@ class Curveplot:
     def __init__(self):
         print('Curveplotのコンストラクタ呼び出し')
 
+    # らせんの３次元グラフ生成メソッド
     def plotSpiral(self):
-        # らせんの３次元グラフ生成メソッド
         X, Y, Z = np.meshgrid(
             np.arange(-LX, LX+1, gridwidth),
             np.arange(-LY, LY+1, gridwidth),
