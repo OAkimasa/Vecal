@@ -292,36 +292,57 @@ class Curveplot:
         Zs = np.linspace(-LZ, LZ, GnLight)
         ax.plot(Xs, Ys, Zs, linewidth=0.5)
 
-        # 点電化の生成
+        # らせん上に点電化を生成
         theta = np.linspace(0, Ltheta, Gn)
-        Xs = Rs*np.cos(theta)
-        print(Xs)
-        Ys = Rs*np.sin(theta)
-        Zs = np.linspace(-LZ, LZ, Gn)
-        Xs = np.reshape(Xs, (1, Gn))
-        Ys = np.reshape(Ys, (1, Gn))
-        Zs = np.reshape(Zs, (1, Gn))
+        Xs0 = Rs*np.cos(theta)
+        Ys0 = Rs*np.sin(theta)
+        Zs0 = np.linspace(-LZ, LZ, Gn)
+        Xs0 = np.reshape(Xs0, (1, Gn))
+        Ys0 = np.reshape(Ys0, (1, Gn))
+        Zs0 = np.reshape(Zs0, (1, Gn))
 
         # 点電荷によるベクトル場の計算
         Q = Qsum/Gn
-        Us = np.zeros((LXx, LXx, LXx), dtype=float)
-        Vs = np.zeros((LYy, LYy, LYy), dtype=float)
-        Ws = np.zeros((LZz, LZz, LZz), dtype=float)
+        U0 = np.zeros((LXx, LXx, LXx), dtype=float)
+        V0 = np.zeros((LYy, LYy, LYy), dtype=float)
+        W0 = np.zeros((LZz, LZz, LZz), dtype=float)
 
         Ve = Vecal()  # インスタンス化
         args_ary = []
         for i in range(Gn):
-            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            args_ary.append((X, Xs0, Y, Ys0, Z, Zs0, Q, i))
         for args in args_ary:
-            results = Ve.eleCal(*args)  # 好みのベクトル計算メソッドを選択
+            results = Ve.eleCal(*args)  # 磁場の計算メソッドを適用した場合、物理学的な意味は得られないかも
             for tmp in results:
-                Us = Us + tmp[0]
-                Vs = Vs + tmp[1]
-                Ws = Ws + tmp[2]
+                U0 = U0 + tmp[0]
+                V0 = V0 + tmp[1]
+                W0 = W0 + tmp[2]
 
-        U = Us
-        V = Vs
-        W = Ws
+        # Z軸上に点電化を生成
+        Xs1 = np.zeros((1, Gn), dtype=float)
+        Ys1 = np.zeros((1, Gn), dtype=float)
+        Zs1 = np.linspace(-LZ, LZ, Gn)
+        Zs1 = np.reshape(Zs1, (1, Gn))
+
+        # 電荷によるベクトル場の計算
+        Q = Qsum/Gn
+        U1 = np.zeros((LXx, LXx, LXx), dtype=float)
+        V1 = np.zeros((LYy, LYy, LYy), dtype=float)
+        W1 = np.zeros((LZz, LZz, LZz), dtype=float)
+
+        args_ary = []
+        for i in range(Gn):
+            args_ary.append((X, Xs1, Y, Ys1, Z, Zs1, Q, i))
+        for args in args_ary:
+            results = Ve.eleCal(*args)  # 磁場の計算メソッドを適用した場合、物理学的な意味は得られないかも
+            for tmp in results:
+                U1 = U1 + tmp[0]
+                V1 = V1 + tmp[1]
+                W1 = W1 + tmp[2]
+
+        U = U0 - U1
+        V = V0 - V1
+        W = W0*0 - W1*0  # 無限に長い直線とみなす
 
         # 全ベクトルの大きさを合計
         UVW = np.nansum(
@@ -364,7 +385,7 @@ if __name__ == "__main__":
     Cu.plotSpiral()  # 好みのプロットメソッドを指定
 
     ax = fig.add_subplot(1, 2, 2, projection='3d')
-    Cu.plotDiffSpi()  # 好みのプロットメソッドを指定
+    Cu.plotDspiral()  # 好みのプロットメソッドを指定
 
     print(time.time()-start)
     # グラフ描画
