@@ -80,7 +80,7 @@ class Curveplot:
         pass
 
     # らせんの３次元グラフ生成メソッド
-    def plotSpiral(self):
+    def plotSpiral(self, selectFunc):
         X, Y, Z = np.meshgrid(
             np.arange(-LX, LX+1, gridwidth),
             np.arange(-LY, LY+1, gridwidth),
@@ -115,16 +115,32 @@ class Curveplot:
         V = np.zeros((LYy, LYy, LYy), dtype=float)
         W = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        Ve = Vecal()  # インスタンス化
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-        for args in args_ary:
-            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
-            for tmp in results:
-                U = U + tmp[0]
-                V = V + tmp[1]
-                W = W + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    U = U + tmp[0]
+                    V = V + tmp[1]
+                    W = W + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    U = U + tmp[0]
+                    V = V + tmp[1]
+                    W = W + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         # 全ベクトルの大きさを合計
         UVW = np.nansum(
@@ -157,7 +173,7 @@ class Curveplot:
         ax.set_zlim(mid_z - max_range, mid_z + max_range)
 
     # ２重らせんの３次元グラフ生成メソッド
-    def plotDspiral(self):
+    def plotDspiral(self, selectFunc):
         X, Y, Z = np.meshgrid(
             np.arange(-LX, LX+1, gridwidth),
             np.arange(-LY, LY+1, gridwidth),
@@ -192,16 +208,32 @@ class Curveplot:
         Vin = np.zeros((LYy, LYy, LYy), dtype=float)
         Win = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        Ve = Vecal()  # インスタンス化
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-        for args in args_ary:
-            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
-            for tmp in results:
-                Uin = Uin + tmp[0]
-                Vin = Vin + tmp[1]
-                Win = Win + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    Uin = Uin + tmp[0]
+                    Vin = Vin + tmp[1]
+                    Win = Win + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    Uin = Uin + tmp[0]
+                    Vin = Vin + tmp[1]
+                    Win = Win + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         # 外側らせんの表示
         Ltheta = Nn*2*np.pi  # theta生成数
@@ -226,15 +258,32 @@ class Curveplot:
         Vout = np.zeros((LYy, LYy, LYy), dtype=float)
         Wout = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-        for args in args_ary:
-            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
-            for tmp in results:
-                Uout = Uout + tmp[0]
-                Vout = Vout + tmp[1]
-                Wout = Wout + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    Uout = Uout + tmp[0]
+                    Vout = Vout + tmp[1]
+                    Wout = Wout + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    Uout = Uout + tmp[0]
+                    Vout = Vout + tmp[1]
+                    Wout = Wout + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         # ２つのベクトル場の合計
         U = Uin + Uout
@@ -272,7 +321,7 @@ class Curveplot:
         ax.set_zlim(mid_z - max_range, mid_z + max_range)
 
     # らせんとZ軸の差分表示メソッド（電場用？）
-    def plotDiffSpi(self):
+    def plotDiffSpi(self, selectFunc):
         X, Y, Z = np.meshgrid(
             np.arange(-LX, LX+1, gridwidth),
             np.arange(-LY, LY+1, gridwidth),
@@ -307,16 +356,32 @@ class Curveplot:
         V0 = np.zeros((LYy, LYy, LYy), dtype=float)
         W0 = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        Ve = Vecal()  # インスタンス化
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs0, Y, Ys0, Z, Zs0, Q, i))
-        for args in args_ary:
-            results = Ve.eleCal(*args)  # 磁場の計算メソッドを適用した場合、物理学的な意味は得られないかも
-            for tmp in results:
-                U0 = U0 + tmp[0]
-                V0 = V0 + tmp[1]
-                W0 = W0 + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs0, Y, Ys0, Z, Zs0, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    U0 = U0 + tmp[0]
+                    V0 = V0 + tmp[1]
+                    W0 = W0 + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs0, Y, Ys0, Z, Zs0, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    U0 = U0 + tmp[0]
+                    V0 = V0 + tmp[1]
+                    W0 = W0 + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         # Z軸上に点電化を生成
         Xs1 = np.zeros((1, Gn), dtype=float)
@@ -330,15 +395,32 @@ class Curveplot:
         V1 = np.zeros((LYy, LYy, LYy), dtype=float)
         W1 = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs1, Y, Ys1, Z, Zs1, Q, i))
-        for args in args_ary:
-            results = Ve.eleCal(*args)  # 磁場の計算メソッドを適用した場合、物理学的な意味は得られないかも
-            for tmp in results:
-                U1 = U1 + tmp[0]
-                V1 = V1 + tmp[1]
-                W1 = W1 + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs1, Y, Ys1, Z, Zs1, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    U1 = U1 + tmp[0]
+                    V1 = V1 + tmp[1]
+                    W1 = W1 + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs1, Y, Ys1, Z, Zs1, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    U1 = U1 + tmp[0]
+                    V1 = V1 + tmp[1]
+                    W1 = W1 + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         U = U0 - U1
         V = V0 - V1
@@ -375,7 +457,7 @@ class Curveplot:
         ax.set_zlim(mid_z - max_range, mid_z + max_range)
 
     # 円環の３次元グラフ生成メソッド
-    def plotTorus(self):
+    def plotTorus(self, selectFunc):
         X, Y, Z = np.meshgrid(
             np.arange(-LX, LX+1, gridwidth),
             np.arange(-LY, LY+1, gridwidth),
@@ -416,16 +498,32 @@ class Curveplot:
         V = np.zeros((LYy, LYy, LYy), dtype=float)
         W = np.zeros((LZz, LZz, LZz), dtype=float)
 
-        Ve = Vecal()  # インスタンス化
-        args_ary = []
-        for i in range(Gn):
-            args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-        for args in args_ary:
-            results = Ve.magCross(*args)  # 好みのベクトル計算メソッドを選択
-            for tmp in results:
-                U = U + tmp[0]
-                V = V + tmp[1]
-                W = W + tmp[2]
+        if selectFunc == 0:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.magCross(*args)  # 磁場
+                for tmp in results:
+                    U = U + tmp[0]
+                    V = V + tmp[1]
+                    W = W + tmp[2]
+
+        elif selectFunc == 1:
+            Ve = Vecal()  # インスタンス化
+            args_ary = []
+            for i in range(Gn):
+                args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+            for args in args_ary:
+                results = Ve.eleCal(*args)  # 電場
+                for tmp in results:
+                    U = U + tmp[0]
+                    V = V + tmp[1]
+                    W = W + tmp[2]
+
+        else:
+            print('Forgot to choose a calculation method')
 
         # 全ベクトルの大きさを合計
         UVW = np.nansum(
@@ -465,10 +563,10 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=(16, 8))
 
     ax = fig.add_subplot(1, 2, 1, projection='3d')
-    Cu.plotSpiral()  # 好みのプロットメソッドを指定
+    Cu.plotDspiral(0)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
 
     ax = fig.add_subplot(1, 2, 2, projection='3d')
-    Cu.plotTorus()  # 好みのプロットメソッドを指定
+    Cu.plotDspiral(1)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
 
     print(time.time()-start)
     # グラフ描画
