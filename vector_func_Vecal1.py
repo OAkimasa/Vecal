@@ -161,6 +161,13 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        if selectFunc == 0:
+            plt.title('plotSpiral_magCross')
+        elif selectFunc == 1:
+            plt.title('plotSpiral_eleCal')
+        else:
+            plt.title('error')
+
         # 目盛り幅を揃える
         max_range = np.array(
             [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
@@ -309,6 +316,13 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        if selectFunc == 0:
+            plt.title('plotDspiral_magCross')
+        elif selectFunc == 1:
+            plt.title('plotDspiral_eleCal')
+        else:
+            plt.title('error')
+
         # 目盛り幅を揃える
         max_range = np.array(
             [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
@@ -445,6 +459,13 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        if selectFunc == 0:
+            plt.title('plotDiffspi_magCross')
+        elif selectFunc == 1:
+            plt.title('plotDiffspi_eleCal')
+        else:
+            plt.title('error')
+
         # 目盛り幅を揃える
         max_range = np.array(
             [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
@@ -543,6 +564,13 @@ class Curveplot:
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_zlabel('z')
+
+        if selectFunc == 0:
+            plt.title('plotTorus_magCross')
+        elif selectFunc == 1:
+            plt.title('plotTorus_eleCal')
+        else:
+            plt.title('error')
 
         # 目盛り幅を揃える
         max_range = np.array(
@@ -703,6 +731,13 @@ class Curveplot:
         ax.set_ylabel('y')
         ax.set_zlabel('z')
 
+        if selectFunc == 0:
+            plt.title('plotDtorus_magCross')
+        elif selectFunc == 1:
+            plt.title('plotDtorus_eleCal')
+        else:
+            plt.title('error')
+
         # 目盛り幅を揃える
         max_range = np.array(
             [X.max()-X.min(), Y.max()-Y.min(), Z.max()-Z.min()]).max() * 0.5
@@ -796,6 +831,13 @@ class Curveplot:
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_zlabel('z')
+
+        if selectFunc == 0:
+            plt.title('plotCsol_magCross')
+        elif selectFunc == 1:
+            plt.title('plotCsol_eleCal')
+        else:
+            plt.title('error')
 
         # 目盛り幅を揃える
         max_range = np.array(
