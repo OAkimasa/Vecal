@@ -850,6 +850,97 @@ class Curveplot:
         ax.set_ylim(mid_y - max_range, mid_y + max_range)
         ax.set_zlim(mid_z - max_range, mid_z + max_range)
 
+    # らせんの中心軸について、巻き数とノルムをプロット
+    def plotCenter(self, selectFunc):
+        def base(j, selectFunc):
+            X, Y, Z = np.meshgrid(
+                np.arange(-LX, LX+1, gridwidth),
+                np.arange(-LY, LY+1, gridwidth),
+                np.arange(-LZ, LZ+1, gridwidth)
+                )
+
+            # 置きなおし
+            LXx = 1+math.floor(LX/gridwidth)*2
+            LYy = 1+math.floor(LY/gridwidth)*2
+            LZz = 1+math.floor(LZ/gridwidth)*2
+
+            # 点電化の生成
+            Ltheta = j*2*np.pi  # theta生成数
+            theta = np.linspace(0, Ltheta, Gn)
+            Xs = Rs*np.cos(theta)
+            Ys = Rs*np.sin(theta)
+            Zs = np.linspace(-LZ, LZ, Gn)
+            Xs = np.reshape(Xs, (1, Gn))
+            Ys = np.reshape(Ys, (1, Gn))
+            Zs = np.reshape(Zs, (1, Gn))
+
+            # ベクトル場の計算
+            Q = Qsum/Gn
+            U = np.zeros((LXx, LXx, LXx), dtype=float)
+            V = np.zeros((LYy, LYy, LYy), dtype=float)
+            W = np.zeros((LZz, LZz, LZz), dtype=float)
+
+            if selectFunc == 0:
+                Ve = Vecal()  # インスタンス化
+                args_ary = []
+                for i in range(Gn):
+                    args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+                for args in args_ary:
+                    results = Ve.magCross(*args)  # 磁場
+                    for tmp in results:
+                        U = U + tmp[0]
+                        V = V + tmp[1]
+                        W = W + tmp[2]
+
+            elif selectFunc == 1:
+                Ve = Vecal()  # インスタンス化
+                args_ary = []
+                for i in range(Gn):
+                    args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
+                for args in args_ary:
+                    results = Ve.eleCal(*args)  # 電場
+                    for tmp in results:
+                        U = U + tmp[0]
+                        V = V + tmp[1]
+                        W = W + tmp[2]
+
+            else:
+                print('Forgot to choose a calculation method')
+
+            # ソレノイド中心のベクトル
+            Uc = U[int(LL/2) ,int(LL/2)]
+            Vc = V[int(LL/2) ,int(LL/2)]
+            Wc = W[int(LL/2) ,int(LL/2)]
+            Cuvw = np.sqrt(Uc**2) + np.sqrt(Vc**2) + np.sqrt(Wc**2)
+            return Cuvw
+
+        Jpl = []
+        arrnum = []
+        norm = []
+        for j in range(Nn):
+            Jpl.append([j])
+            Nnresult = base(j, selectFunc).tolist()
+            norm.append(Nnresult)
+            arrnum.append(np.arange(-LL, LL+1, 2).tolist())
+            print(j)
+
+        npJpl = np.array(Jpl)
+        nparrnum = np.array(arrnum)
+        npnorm = np.array(norm)
+        ax.plot_wireframe(npJpl, nparrnum, npnorm, color='b')
+
+        # グラフ表示設定
+        if selectFunc == 0:
+            plt.title('Center Norm_magCross')
+        elif selectFunc == 1:
+            plt.title('Center Norm_eleCal')
+        else:
+            plt.title('error')
+
+        ax.set_xlabel('Winding Number')
+        ax.set_ylabel('Z-axis')
+        ax.set_zlabel('Norm')
+
 
 if __name__ == "__main__":
     start = time.time()
@@ -858,10 +949,10 @@ if __name__ == "__main__":
     fig = plt.figure(figsize=(16, 8))
 
     ax = fig.add_subplot(1, 2, 1, projection='3d')
-    Cu.plotTorus(0)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
+    Cu.plotSpiral(0)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
 
     ax = fig.add_subplot(1, 2, 2, projection='3d')
-    Cu.plotCsol(0)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
+    Cu.plotCenter(0)  # 好みのプロットメソッドを指定, 0:magCross, 1:eleCal
 
     print(time.time()-start)
     # グラフ描画
