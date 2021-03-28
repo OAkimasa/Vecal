@@ -951,10 +951,9 @@ class Curveplot:
             )
 
         # 置きなおし
-        LXx = 1+math.floor(LX/gridwidth)*2
-        LYy = 1+math.floor(LY/gridwidth)*2
-        LZz = 1+math.floor(LZ/gridwidth)*2
-
+        #LXx = 1+math.floor(LX/gridwidth)*2
+        #LYy = 1+math.floor(LY/gridwidth)*2
+        #LZz = 1+math.floor(LZ/gridwidth)*2
 
         ims = []
         for j in range(Nn):
@@ -964,59 +963,11 @@ class Curveplot:
             Xs = Rs*np.cos(theta)
             Ys = Rs*np.sin(theta)
             Zs = np.linspace(-LZ, LZ, GnLight)
-            ax.plot(Xs, Ys, Zs, linewidth=0.5, color='b')
-
-            # 点電化の生成
-            theta = np.linspace(0, Ltheta, Gn)
-            Xs = Rs*np.cos(theta)
-            Ys = Rs*np.sin(theta)
-            Zs = np.linspace(-LZ, LZ, Gn)
-            Xs = np.reshape(Xs, (1, Gn))
-            Ys = np.reshape(Ys, (1, Gn))
-            Zs = np.reshape(Zs, (1, Gn))
-
-            # 点電荷によるベクトル場の計算
-            Q = Qsum/Gn
-            U = np.zeros((LXx, LXx, LXx), dtype=float)
-            V = np.zeros((LYy, LYy, LYy), dtype=float)
-            W = np.zeros((LZz, LZz, LZz), dtype=float)
-
-            if selectFunc == 0:
-                Ve = Vecal()  # インスタンス化
-                args_ary = []
-                for i in range(Gn):
-                    args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-                for args in args_ary:
-                    results = Ve.magCross(*args)  # 磁場
-                    for tmp in results:
-                        U = U + tmp[0]
-                        V = V + tmp[1]
-                        W = W + tmp[2]
-
-            elif selectFunc == 1:
-                Ve = Vecal()  # インスタンス化
-                args_ary = []
-                for i in range(Gn):
-                    args_ary.append((X, Xs, Y, Ys, Z, Zs, Q, i))
-                for args in args_ary:
-                    results = Ve.eleCal(*args)  # 電場
-                    for tmp in results:
-                        U = U + tmp[0]
-                        V = V + tmp[1]
-                        W = W + tmp[2]
-
-            else:
-                print('Forgot to choose a calculation method')
-
-            # 全ベクトルの大きさを合計
-            UVW = np.nansum(
-                np.sqrt(U**2)) + np.nansum(np.sqrt(V**2)) + np.nansum(np.sqrt(W**2))
-            # print(UVW)
-            FinalResize = 200/UVW  # 倍率
-            im = ax.quiver(X, Y, Z, U*FinalResize, V*FinalResize, W*FinalResize,
-                            edgecolor='r', facecolor='None', linewidth=0.5)
-            ims.append([im])
+            im = ax.plot(Xs, Ys, Zs, linewidth=0.5, color='b')
+            ims.extend([im])
             print(j)
+
+        ani = animation.ArtistAnimation(fig, ims, blit=True)
 
         # グラフの見た目について
         ax.set_xlim(-LX, LX)
@@ -1044,9 +995,6 @@ class Curveplot:
         ax.set_xlim(mid_x - max_range, mid_x + max_range)
         ax.set_ylim(mid_y - max_range, mid_y + max_range)
         ax.set_zlim(mid_z - max_range, mid_z + max_range)
-
-        # animation表示
-        ani = animation.ArtistAnimation(fig, ims, interval=10000)
 
 
 if __name__ == "__main__":
